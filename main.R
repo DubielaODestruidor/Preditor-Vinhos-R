@@ -1,4 +1,7 @@
 library(ggplot2)
+library(cowplot)
+library(caret)
+
 
 # Loading data
 data_red <- read.csv("./bases-de-dados/winequality-red.csv", sep = ";")
@@ -13,18 +16,24 @@ if (all.equal(colnames(data_red), colnames(data_white))) {
   print("The databases have different columns")
 }
 
-# Checking wine quality count of both data.frames
-red_quality_quantity <- table(data_red$quality)
+# Getting and visualizing the quantity of each quality class
 red_quality <- data_red$quality
-
-white_quality_quantity <- table(data_white$quality)
 white_quality <- data_white$quality
 
-# Dataviz of wine quality count
-red_plot_quality_quantity <- ggplot(data_red, aes(x = quality)) +
+red_plot_quality_quantity <- ggplot(
+  data_red,
+  aes(x = quality)
+  ) +
   geom_bar(fill = "red") +
-  labs(title = "Red Wine Quality", x = "Quality (Class)", y = "Quantity (Count)") +
-  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5) +
+  labs(
+    x = "Quality (Class)",
+    y = "Quantity (Count)"
+  ) +
+  geom_text(
+    stat = "count",
+    aes(label = after_stat(count)),
+    vjust = -0.5
+  ) +
   theme_minimal() +
   theme(
     panel.background = element_rect(fill = "grey"),
@@ -33,22 +42,49 @@ red_plot_quality_quantity <- ggplot(data_red, aes(x = quality)) +
     breaks = seq(
       min(red_quality),
       max(red_quality),
-      by = 1)
+      by = 1
+      )
     )
 
 white_plot_quality_quantity <- ggplot(
-  data_white, aes(x = quality)) +
+  data_white,
+  aes(x = quality)
+) +
   geom_bar(fill = "white") +
-  labs(title = "White Wine Quality", x = "Quality (Class)", y = "Quantity (Count)") +
-  geom_text(stat = "count", aes(label = ..count..), vjust = -0.5) +
+  labs(
+    x = "Quality (Class)",
+    y = "Quantity (Count)"
+  ) +
+  geom_text(
+    stat = "count",
+    aes(label = after_stat(count)),
+    vjust = -0.5
+  ) +
   theme_minimal() +
   theme(
     panel.background = element_rect(fill = "grey"),
   ) +
   scale_x_continuous(
     breaks = seq(
-      min(white_quality),
-      max(white_quality),
+      min(red_quality),
+      max(red_quality),
       by = 1
     )
   )
+
+plot_grid(
+  red_plot_quality_quantity,
+  white_plot_quality_quantity,
+  labels = c("Red Wine", "White Wine"),
+  ncol = 2,
+  label_size = 12
+)
+
+# Balancing the data
+upSample(
+  x = data_red,
+  y = data_red$quality,
+  list = FALSE,
+  yname = "Red Quality"
+)
+
