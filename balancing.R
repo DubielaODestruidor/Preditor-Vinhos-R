@@ -1,85 +1,52 @@
-library(ggplot2)
-library(cowplot)
+library(dplyr)
 library(caret)
+set.seed(123)
 
 
 # Loading data
-data_red <- read.csv("./bases-de-dados/winequality-red.csv", sep = ";")
-data_white <- read.csv("./bases-de-dados/winequality-white.csv", sep = ";")
+data_red <- read.csv("./bases-de-dados/winequality-red.csv",
+                     sep = ";")
+data_white <- read.csv("./bases-de-dados/winequality-white.csv",
+                       sep = ";")
 
-# Checking if the databases era equal
-if (all.equal(colnames(data_red), colnames(data_white))) {
-  print("The databases have the same columns")
-  columns <- colnames(data_red)
-  print(columns)
-} else {
-  print("The databases have different columns")
-}
+# Getting the quantity of each class (quality)
+data_red <- data_red %>%
+  mutate(quality = as.factor(quality))
+cat("\nClass distribution in data_red:")
+print(table(data_red$quality))
+cat("---------------------- \n")
 
-# Getting and visualizing the quantity of each quality class
-red_quality <- data_red$quality
-white_quality <- data_white$quality
-
-red_plot_quality_quantity <- ggplot(data_red, aes(x = quality)) +
-  geom_bar(fill = "red") +
-  labs(x = "Quality (Class)", y = "Quantity (Count)") +
-  geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.5) +
-  theme_minimal() +
-  theme(panel.background = element_rect(fill = "grey")) +
-  scale_x_continuous(breaks = seq(min(red_quality), max(red_quality), by = 1))
-
-white_plot_quality_quantity <- ggplot(data_white, aes(x = quality)) +
-  geom_bar(fill = "white") +
-  labs(x = "Quality (Class)", y = "Quantity (Count)") +
-  geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.5) +
-  theme_minimal() +
-  theme(panel.background = element_rect(fill = "grey")) +
-  scale_x_continuous(breaks = seq(min(red_quality), max(red_quality), by = 1))
-
-plot_grid(
-  red_plot_quality_quantity,
-  white_plot_quality_quantity,
-  labels = c("Red Wine", "White Wine"),
-  ncol = 2,
-  label_size = 12
-)
+data_white <- data_white %>%
+  mutate(quality = as.factor(quality))
+cat("\nClass distribution in data_white:")
+print(table(data_white$quality))
+cat("---------------------- \n")
 
 # Balancing the data
-red_quality_factor <- as.factor(red_quality)
+# ref: https://search.r-project.org/CRAN/refmans/caret/html/downSample.html
 data_red_balanced <- upSample(
   x = data_red,
-  y = red_quality_factor
+  y = data_red$quality
 )
 
-white_quality_factor <- as.factor(white_quality)
 data_white_balanced <- upSample(
   x = data_white,
-  y = white_quality_factor
+  y = data_white$quality
 )
 
-red_plot_balanced_quality_quantity <- ggplot(data_red_balanced, aes(x = quality)) +
-  geom_bar(fill = "red") +
-  labs(x = "Quality (Class)", y = "Quantity (Count)") +
-  geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.5) +
-  theme_minimal() +
-  theme(panel.background = element_rect(fill = "grey")) +
-  scale_x_continuous(breaks = seq(min(red_quality), max(red_quality), by = 1))
+cat("\nBalanced data_red:")
+print(table(data_red_balanced$quality))
+cat("---------------------- \n")
 
-white_plot_balanced_quality_quantity <- ggplot(data_white_balanced, aes(x = quality)) +
-  geom_bar(fill = "white") +
-  labs(x = "Quality (Class)", y = "Quantity (Count)") +
-  geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.5) +
-  theme_minimal() +
-  theme(panel.background = element_rect(fill = "grey")) +
-  scale_x_continuous(breaks = seq(min(red_quality), max(red_quality), by = 1))
+cat("\nBalanced data_white")
+print(table(data_white_balanced$quality))
+cat("---------------------- \n \n")
 
-plot_grid(
-  red_plot_balanced_quality_quantity,
-  white_plot_balanced_quality_quantity,
-  labels = c("Red Wine", "White Wine"),
-  ncol = 2,
-  label_size = 12
-)
+# Dropping the column "Class" created by the upSample function
+data_red_balanced <- data_red_balanced %>%
+  select(-Class)
+data_white_balanced <- data_white_balanced %>%
+  select(-Class)
 
 # Saving the balanced data
 write.csv(data_red_balanced,
