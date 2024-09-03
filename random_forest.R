@@ -2,9 +2,9 @@ library(randomForest)
 set.seed(123)
 
 # Loading data
-data_red <- read.csv("./bases-de-dados/winequality-red-balanced-norm.csv",
+data_red <- read.csv("./databases/winequality-red-balanced-norm.csv",
                      sep = ",")
-data_white <- read.csv("./bases-de-dados/winequality-white-balanced-norm.csv",
+data_white <- read.csv("./databases/winequality-white-balanced-norm.csv",
                        sep = ",")
 
 # Random Forest training
@@ -27,3 +27,7 @@ cat("---------------------- \n")
 
 varImpPlot(rf_red)
 varImpPlot(rf_white)
+
+# Saving the models
+save(rf_red, file = "./models/rf_red.RData")
+save(rf_white, file = "./models/rf_white.RData")

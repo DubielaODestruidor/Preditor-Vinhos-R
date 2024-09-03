@@ -4,9 +4,9 @@ set.seed(123)
 
 
 # Loading data
-data_red <- read.csv("./bases-de-dados/winequality-red-balanced.csv",
+data_red <- read.csv("./databases/winequality-red-balanced.csv",
                      sep = ",")
-data_white <- read.csv("./bases-de-dados/winequality-white-balanced.csv",
+data_white <- read.csv("./databases/winequality-white-balanced.csv",
                        sep = ",")
 
 # Splitting the data in the class to be predicted and the features
@@ -35,8 +35,10 @@ data_white_norm <- data_white_norm %>%
 
 # Saving the normalized data
 write.csv(data_red_norm,
-          "./bases-de-dados/winequality-red-balanced-norm.csv",
+          "./databases/winequality-red-balanced-norm.csv",
           row.names = FALSE)
 write.csv(data_white_norm,
-          "./bases-de-dados/winequality-white-balanced-norm.csv",
+          "./databases/winequality-white-balanced-norm.csv",
           row.names = FALSE)
+
+cat("\nDone")

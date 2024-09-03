@@ -4,9 +4,9 @@ set.seed(123)
 
 
 # Loading data
-data_red <- read.csv("./bases-de-dados/winequality-red.csv",
+data_red <- read.csv("./databases/winequality-red.csv",
                      sep = ";")
-data_white <- read.csv("./bases-de-dados/winequality-white.csv",
+data_white <- read.csv("./databases/winequality-white.csv",
                        sep = ";")
 
 # Getting the quantity of each class (quality)
@@ -50,8 +50,8 @@ data_white_balanced <- data_white_balanced %>%
 
 # Saving the balanced data
 write.csv(data_red_balanced,
-          "./bases-de-dados/winequality-red-balanced.csv",
+          "./databases/winequality-red-balanced.csv",
           row.names = FALSE)
 write.csv(data_white_balanced,
-          "./bases-de-dados/winequality-white-balanced.csv",
+          "./databases/winequality-white-balanced.csv",
           row.names = FALSE)
