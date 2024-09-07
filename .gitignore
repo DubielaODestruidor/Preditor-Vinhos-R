@@ -3,3 +3,6 @@
 .Rhistory
 .RData
 .Ruserdata
+
+# Saving macOS generated files
+.DS_Store
