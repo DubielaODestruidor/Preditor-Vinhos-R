@@ -3,19 +3,14 @@ library(randomForest)
 library(caret)
 set.seed(123)
 
-# Loading the models
-# NOTE: Models cannot be attributed to variables in R
+
+cat("Red wine:\n")
+# Loading the model
 load("./models/rf_red.RData")
-load("./models/rf_white.RData")
-
-# Showing the models
+# Showing the model
 print(rf_red)
-print(rf_white)
-
 # Visualizing the importance of each characteristic
 varImpPlot(rf_red)
-varImpPlot(rf_white)
-
 # Making predictions
 # predict ref: https://www.rdocumentation.org/packages/randomForest/versions/4.7-1.1/topics/predict.randomForest
 data_red <- read.csv("./databases/winequality-red-balanced-norm.csv",
@@ -25,6 +20,19 @@ data_red <- data_red %>%
 predictions_red <- predict(rf_red, data_red) %>%
   trunc() %>% # Rounding to keep the factor levels equal data_red$quality
   as.factor()
+# Confusion matrix
+print(confusionMatrix(predictions_red, data_red$quality))
+cat("---------------------------------------------\n")
+
+
+# Doing the same for the white wine model
+cat("White wine:\n")
+
+load("./models/rf_white.RData")
+
+print(rf_white)
+
+varImpPlot(rf_white)
 
 data_white <- read.csv("./databases/winequality-white-balanced-norm.csv",
                        sep = ",")
@@ -34,11 +42,5 @@ predictions_white <- predict(rf_white, data_white) %>%
   trunc() %>%
   as.factor()
 
-# Confusion matrix
-cat("Red wine confusion matrix\n")
-print(confusionMatrix(predictions_red, data_red$quality))
-cat("---------------------------------------------\n")
-
-cat("White wine confusion matrix\n")
 print(confusionMatrix(predictions_white, data_white$quality))
 cat("---------------------------------------------\n")
