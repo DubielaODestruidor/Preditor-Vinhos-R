@@ -6,3 +6,6 @@
 
 # Saving macOS generated files
 .DS_Store
+
+# Ignore Jetbrains IDE files
+.idea
