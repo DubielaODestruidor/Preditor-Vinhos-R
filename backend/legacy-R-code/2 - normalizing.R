@@ -20,10 +20,10 @@ data_white <- data_white %>%
 
 # Normalizing the data with min-max scaler
 # ref: https://www.digitalocean.com/community/tutorials/normalize-data-in-r
-process_red <- preProcess(data_red, method = "range")
+process_red <- preProcess(data_red, method = c("range"))
 data_red_norm <- predict(process_red, data_red)
 
-process_white <- preProcess(data_white, method = "range")
+process_white <- preProcess(data_white, method = c("range"))
 data_white_norm <- predict(process_white, data_white)
 
 # Putting the class back in the data for the training
