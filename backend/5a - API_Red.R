@@ -20,7 +20,7 @@ function(fixed.acidity, volatile.acidity, citric.acid, residual.sugar,
          chlorides, free.sulfur.dioxide, total.sulfur.dioxide,
          density, pH, sulphates, alcohol) {
 
-  # Converter os parâmetros para numéricos
+  # Converte os parâmetros para numéricos
   input_data <- data.frame(
     fixed.acidity = as.numeric(fixed.acidity),
     volatile.acidity = as.numeric(volatile.acidity),
@@ -35,9 +35,9 @@ function(fixed.acidity, volatile.acidity, citric.acid, residual.sugar,
     alcohol = as.numeric(alcohol)
   )
 
-  # Realizar a predição
+  # Realiza a predição
   prediction <- predict(rf_red, newdata = input_data)
 
-  # Retornar a predição
+  # Retornr a predição
   list(quality = prediction)
 }
